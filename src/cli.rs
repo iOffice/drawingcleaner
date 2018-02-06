@@ -216,12 +216,10 @@ pub fn prepare_app<'a, 'b>() -> App<'a, 'b> {
         .version(env!("CARGO_PKG_VERSION"))
         .arg(Arg::with_name("in-file")
             .required(true)
-            .index(1)
-            .validator(is_svg))
+            .index(1))
         .arg(Arg::with_name("out-file")
             .required_unless(KEYS[Key::Stdout])
-            .index(2)
-            .validator(is_svg))
+            .index(2))
         .arg(Arg::with_name(KEYS[Key::Stdout])
             .short("c")
             .long(KEYS[Key::Stdout]))
@@ -238,8 +236,8 @@ pub fn prepare_app<'a, 'b>() -> App<'a, 'b> {
 
         // elements
         .arg(gen_flag!(Key::RemoveComments, "true"))
-        .arg(gen_flag!(Key::RemoveDeclarations, "true"))
-        .arg(gen_flag!(Key::RemoveNonsvgElements, "true"))
+        .arg(gen_flag!(Key::RemoveDeclarations, "false"))
+        .arg(gen_flag!(Key::RemoveNonsvgElements, "false"))
         .arg(gen_flag!(Key::RemoveUnusedDefs, "true"))
         .arg(gen_flag!(Key::ConvertShapes, "true"))
         .arg(gen_flag!(Key::RemoveTitle, "true"))
@@ -259,13 +257,13 @@ pub fn prepare_app<'a, 'b>() -> App<'a, 'b> {
 
         // attributes
         .arg(gen_flag!(Key::RemoveVersion, "true"))
-        .arg(gen_flag!(Key::RemoveNonsvgAttributes, "true"))
-        .arg(gen_flag!(Key::RemoveUnreferencedIds, "true"))
-        .arg(gen_flag!(Key::TrimIds, "true"))
+        .arg(gen_flag!(Key::RemoveNonsvgAttributes, "false"))
+        .arg(gen_flag!(Key::RemoveUnreferencedIds, "false"))
+        .arg(gen_flag!(Key::TrimIds, "false"))
         .arg(gen_flag!(Key::RemoveTextAttributes, "true"))
         .arg(gen_flag!(Key::RemoveUnusedCoordinates, "true"))
         .arg(gen_flag!(Key::RemoveDefaultAttributes, "true"))
-        .arg(gen_flag!(Key::RemoveXmlnsXlinkAttribute, "true"))
+        .arg(gen_flag!(Key::RemoveXmlnsXlinkAttribute, "false"))
         .arg(gen_flag!(Key::RemoveNeedlessAttributes, "true"))
         .arg(gen_flag!(Key::RemoveGradientAttributes, "false"))
         .arg(Arg::with_name(KEYS[Key::JoinStyleAttributes])
@@ -304,14 +302,6 @@ pub fn prepare_app<'a, 'b>() -> App<'a, 'b> {
             .value_name("INDENT")
             .possible_values(&["none", "0", "1", "2", "3", "4", "tabs"])
             .default_value("none"))
-}
-
-fn is_svg(val: String) -> Result<(), String> {
-    if val.ends_with(".svg") || val.ends_with(".SVG") || val == "-" {
-        Ok(())
-    } else {
-        Err(String::from("The file format must be SVG."))
-    }
 }
 
 fn is_precision(val: String) -> Result<(), String> {

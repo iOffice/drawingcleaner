@@ -26,15 +26,16 @@ path = "src/main.rs"
 [dependencies]
 log = "0.4"
 fern = "0.5"
+flate2 = "1.0"
 
 [dependencies.svgdom]
 # latest
-# git = "https://github.com/RazrFalcon/libsvgdom.git"
-# branch = "devel"
+git = "https://github.com/RazrFalcon/libsvgdom.git"
+branch = "master"
 # local copy
 # path = "../svgdom"
 # from crates
-version = "0.10"
+#version = "0.10"
 
 [dependencies.error-chain]
 version = "0.11"

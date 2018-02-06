@@ -27,6 +27,7 @@ extern crate log;
 #[macro_use]
 extern crate error_chain;
 extern crate svgdom;
+extern crate flate2;
 
 pub use svgdom::{
     ChainedErrorExt,

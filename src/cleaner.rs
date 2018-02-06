@@ -16,7 +16,12 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+use flate2::read::GzDecoder;
+use flate2::Compression;
+use flate2::write::GzEncoder;
+
 use std::fs;
+use std::str;
 use std::io::{
     self,
     Read,
@@ -50,14 +55,19 @@ pub fn load_file(path: &str) -> Result<String, io::Error> {
     let mut file = fs::File::open(path)?;
     let length = file.metadata()?.len() as usize;
 
-    let mut s = String::with_capacity(length + 1);
-    file.read_to_string(&mut s)?;
+    let mut gz = Vec::with_capacity(length + 1);
+    file.read_to_end(&mut gz)?;
+
+    let mut d = GzDecoder::new(gz.as_slice());
+    let mut s = String::new();
+    d.read_to_string(&mut s)?;
 
     Ok(s)
 }
 
 pub fn parse_data(data: &str, opt: &ParseOptions) -> Result<Document, svgdom::Error> {
-    Document::from_str_with_opt(data, opt)
+    let a = Document::from_str_with_opt(data, opt)?;
+    Ok(a)
 }
 
 pub fn clean_doc(
@@ -256,7 +266,10 @@ pub fn write_stdout(data: &[u8]) -> Result<(), io::Error> {
 
 pub fn save_file(data: &[u8], path: &str) -> Result<(), io::Error> {
     let mut f = fs::File::create(path)?;
-    f.write_all(data)?;
+    let mut gz = GzEncoder::new(Vec::new(), Compression::default());
+    gz.write_all(data)?;
+    let zipped = gz.finish()?;
+    f.write_all(zipped.as_slice())?;
 
     Ok(())
 }
