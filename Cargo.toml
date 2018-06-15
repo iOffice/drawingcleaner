@@ -30,7 +30,7 @@ flate2 = "1.0"
 
 [dependencies.svgdom]
 # latest
-git = "https://github.com/RazrFalcon/libsvgdom.git"
+git = "https://github.com/iOffice/libsvgdom.git"
 branch = "master"
 # local copy
 # path = "../svgdom"
